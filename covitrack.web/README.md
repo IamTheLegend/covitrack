@@ -2,6 +2,13 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.6.
 
+To run this web application you need to install the following dependencies:
+
+1. NodeJS
+2. npm
+3. Run the following command `npm install` in the `covitrack.web` folder
+4. Follow the below links and helper command to run the application
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
