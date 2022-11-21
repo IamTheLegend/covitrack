@@ -1,0 +1,19 @@
+#dashboard_view {
+  height: calc(100% - 60px);
+  background-color: #e7e7e7;
+  padding: 10px;
+}
+
+.widget {
+  box-shadow: 0px 0px 0px 2px rgb(0, 0, 0, 0.2);
+  border-radius: 0px;
+  .widget-title {
+    font-size: 16px;
+    border-bottom: 1px dashed gray;
+    padding-bottom: 5px;
+  }
+}
+
+#map_view {
+  width: 49%;
+}

@@ -1,0 +1,12 @@
+#app_footer {
+  height: 20px;
+  position: fixed;
+  bottom: 0px;
+  background-color: #efefef;
+  color: black;
+  font-size: 12px;
+  .footer-text {
+    margin: auto;
+    line-height: 0;
+  }
+}
