@@ -12,10 +12,12 @@ export class DashboardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.loadChart();
+    this.loadMapChart();
+    this.loadMortalityRate();
+    this.loadHospitalizationData();
   }
 
-  data = [
+  state_wise_data = [
     ['us-ma', 10], ['us-wa', 11], ['us-ca', 12], ['us-or', 13],
     ['us-wi', 14], ['us-me', 15], ['us-mi', 16], ['us-nv', 17],
     ['us-nm', 18], ['us-co', 19], ['us-wy', 20], ['us-ks', 21],
@@ -32,7 +34,7 @@ export class DashboardComponent implements OnInit {
   ];
 
 
-  loadChart() {
+  loadMapChart() {
     (async () => {
       const topology = await fetch(
         'https://code.highcharts.com/mapdata/countries/us/us-all.topo.json'
@@ -43,39 +45,162 @@ export class DashboardComponent implements OnInit {
           map: topology
         },
 
-        title: {
-          text: 'Highcharts Maps basic demo'
-        },
-
-        subtitle: {
-          text: 'Source map: <a href="http://code.highcharts.com/mapdata/countries/us/us-all.topo.json">United States of America</a>'
-        },
-
+        title: null,
         mapNavigation: {
           enabled: true,
-          buttonOptions: {
-            verticalAlign: 'bottom'
-          }
+          enableButtons: false
         },
-
         colorAxis: {
-          min: 0
+          min: 1,
+          type: 'logarithmic',
+          minColor: '#EEEEFF',
+          maxColor: '#000022',
+          stops: [
+            [0, '#EFEFFF'],
+            [0.75, '#4444FF'],
+            [1, '#000022']
+          ]
         },
-
+        credits: {
+          enabled: false
+        },
+        legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle',
+        },
         series: [{
-          data: this.data,
-          name: 'Random data',
+          data: this.state_wise_data,
+          name: 'State',
           states: {
             hover: {
               color: '#BADA55'
             }
           },
+          animation: {
+            duration: 1000
+          },
+
           dataLabels: {
             enabled: true,
+            align: 'right',
+            verticalAlign: 'middle',
             format: '{point.name}'
           }
         }]
       } as any);
     })();
   }
+
+  loadMortalityRate() {
+    Highcharts.chart('widget_mortality', {
+      chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+      },
+      title: null,
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      accessibility: {
+        point: {
+          valueSuffix: '%'
+        }
+      },
+      credits: {
+        enabled: false
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+          }
+        }
+      },
+      series: [{
+        name: 'Total',
+        colorByPoint: true,
+        data: [{
+          name: 'Deaths',
+          y: 70.67,
+          color: '#e24644'
+        }, {
+          name: 'Cured',
+          y: 14.77,
+          color: '#10a510'
+        }]
+      }]
+    } as any);
+  }
+
+  loadHospitalizationData() {
+    Highcharts.chart('widget_hospitals', {
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'Major trophies for some English teams',
+        align: 'left'
+      },
+      xAxis: {
+        categories: ['Arsenal', 'Chelsea', 'Liverpool', 'Manchester United']
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Count trophies'
+        },
+        stackLabels: {
+          enabled: true,
+          style: {
+            fontWeight: 'bold',
+            textOutline: 'none'
+          }
+        }
+      },
+      legend: {
+        align: 'left',
+        x: 70,
+        verticalAlign: 'top',
+        y: 70,
+        floating: true,
+        backgroundColor: 'white',
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
+      },
+      tooltip: {
+        headerFormat: '<b>{point.x}</b><br/>',
+        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+      },
+      plotOptions: {
+        column: {
+          stacking: 'normal',
+          dataLabels: {
+            enabled: true
+          }
+        }
+      },
+      series: [{
+        name: 'BPL',
+        data: [3, 5, 1, 13]
+      }, {
+        name: 'FA Cup',
+        data: [14, 8, 8, 12]
+      }, {
+        name: 'CL',
+        data: [0, 2, 6, 3]
+      }]
+    } as any);
+  }
+
+  loadCountyRawData() {
+
+  }
+
 }

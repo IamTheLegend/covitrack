@@ -1,7 +1,8 @@
 #dashboard_view {
   height: calc(100% - 60px);
   background-color: #e7e7e7;
-  padding: 10px;
+  padding: 0.5%;
+  overflow: hidden;
 }
 
 .widget {
@@ -12,8 +13,16 @@
     border-bottom: 1px dashed gray;
     padding-bottom: 5px;
   }
+  margin-left: 0.5%;
+  height: 450px;
 }
 
-#map_view {
-  width: 49%;
+#view_map {
+  width: 55%;
+  float: left;
+}
+
+#view_mortality{
+  width: 35.5%;
+  float:left;
 }
