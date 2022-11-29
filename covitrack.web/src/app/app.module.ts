@@ -10,6 +10,7 @@ import { DashboardModule } from './components/dashboard/dashboard.module';
 import { AppHighchartsModule } from './modules/app-highcharts.module';
 import { MapViewComponent } from './components/widgets/map-view/map-view.component';
 import { MortalityViewComponent } from './components/widgets/mortality-view/mortality-view.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { MortalityViewComponent } from './components/widgets/mortality-view/mort
     AppSharedModule,
     AppMaterialModule,
     AppHighchartsModule,
-    DashboardModule
+    DashboardModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

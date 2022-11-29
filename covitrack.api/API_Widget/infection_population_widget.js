@@ -8,8 +8,9 @@ export async function infectionPopulationWidget() {
         infectionPopulation.push({
             "state_code": apiData[i].state,
             "state_id": apiData[i].fips,
+            "population": apiData[i].population,
             "cases": apiData[i].actuals.cases,
-            "population": apiData[i].population
+            "deaths": apiData[i].actuals.deaths
         })
     }
     //console.log(states)

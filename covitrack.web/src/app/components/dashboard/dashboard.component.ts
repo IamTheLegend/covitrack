@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppHttpService } from '@app/services/app-http.service';
 import * as Highcharts from 'highcharts/highmaps';
 
 
@@ -9,10 +10,18 @@ import * as Highcharts from 'highcharts/highmaps';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  constructor(private appHttpService: AppHttpService) { }
+
+  api_repo = {
+    "url_map_widget": "http://localhost:4201/api/mapWidget",
+    "url_hospitalization": "http://localhost:4201/api/hospitalizationData"
+  }
+
+  states_data: any = [];
+  hospital_data: any = [];
 
   ngOnInit(): void {
-    this.loadMapChart();
+    this.getMapsData();
     this.loadMortalityRate();
     this.loadHospitalizationData();
   }
@@ -34,11 +43,38 @@ export class DashboardComponent implements OnInit {
   ];
 
 
+  getMapsData() {
+    this.appHttpService.GET(this.api_repo.url_map_widget).subscribe((response: any) => {
+      this.states_data = response;
+      this.loadMapChart();
+      this.getHospitalData();
+    });
+  }
+
+  getHospitalData() {
+    let stateIdList = []
+    for (let i = 0; i < this.states_data.length; i++) {
+      stateIdList.push(this.states_data[i]["state_id"])
+    }
+
+    this.appHttpService.POST(this.api_repo.url_hospitalization, { "states": stateIdList }).subscribe((response: any) => {
+      this.hospital_data = response;
+      this.loadHospitalizationData();
+    });
+
+  }
+
   loadMapChart() {
     (async () => {
       const topology = await fetch(
         'https://code.highcharts.com/mapdata/countries/us/us-all.topo.json'
       ).then(response => response.json())
+
+      this.state_wise_data = [];
+
+      for (let index = 0; index < this.states_data.length; index++) {
+        this.state_wise_data.push(['us-' + this.states_data[index]['state_code'].toLowerCase(), this.states_data[index]['cases']]);
+      }
 
       const chart = Highcharts.mapChart('widget_map_view', {
         chart: {
@@ -139,64 +175,54 @@ export class DashboardComponent implements OnInit {
   }
 
   loadHospitalizationData() {
-    Highcharts.chart('widget_hospitals', {
+
+    let hospitalBedsOccupied = []
+    let hospitalBedsFree = []
+    let seriesData = []
+
+    for (let i = 0; i < this.hospital_data.length; i++) {
+      seriesData.push(this.hospital_data[i]["state_code"])
+      hospitalBedsFree.push(this.hospital_data[i]["hospital_beds_free"] || 0)
+      hospitalBedsOccupied.push(this.hospital_data[i]["hospital_beds_occupied"] || 0)
+    }
+
+    Highcharts.chart('widget_hospitalization', {
       chart: {
         type: 'column'
       },
-      title: {
-        text: 'Major trophies for some English teams',
-        align: 'left'
-      },
+      title: null,
       xAxis: {
-        categories: ['Arsenal', 'Chelsea', 'Liverpool', 'Manchester United']
+        categories: seriesData
       },
       yAxis: {
         min: 0,
         title: {
-          text: 'Count trophies'
-        },
-        stackLabels: {
-          enabled: true,
-          style: {
-            fontWeight: 'bold',
-            textOutline: 'none'
-          }
+          text: 'Beds'
         }
       },
-      legend: {
-        align: 'left',
-        x: 70,
-        verticalAlign: 'top',
-        y: 70,
-        floating: true,
-        backgroundColor: 'white',
-        borderColor: '#CCC',
-        borderWidth: 1,
-        shadow: false
-      },
       tooltip: {
-        headerFormat: '<b>{point.x}</b><br/>',
-        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+        shared: true
       },
       plotOptions: {
         column: {
-          stacking: 'normal',
-          dataLabels: {
-            enabled: true
-          }
+          stacking: 'percent'
         }
       },
+      credits: {
+        enabled: false
+      },
       series: [{
-        name: 'BPL',
-        data: [3, 5, 1, 13]
+        name: 'Beds Free',
+        data: hospitalBedsFree,
+        color: "forestgreen"
       }, {
-        name: 'FA Cup',
-        data: [14, 8, 8, 12]
-      }, {
-        name: 'CL',
-        data: [0, 2, 6, 3]
+        name: 'Beds Occupied',
+        data: hospitalBedsOccupied,
+        color: "#c12828"
       }]
     } as any);
+
   }
 
   loadCountyRawData() {

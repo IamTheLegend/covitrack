@@ -1,8 +1,7 @@
 #dashboard_view {
   height: calc(100% - 60px);
-  background-color: #e7e7e7;
-  padding: 0.5%;
-  overflow: hidden;
+  background-color: #e7e7e7;  
+  overflow: auto;
 }
 
 .widget {
@@ -14,15 +13,21 @@
     padding-bottom: 5px;
   }
   margin-left: 0.5%;
+  margin-top: 0.5%;
   height: 450px;
+  float: left;
 }
 
 #view_map {
-  width: 55%;
+  width: 54%;
   float: left;
 }
 
 #view_mortality{
-  width: 35.5%;
+  width: 44.5%;
   float:left;
+}
+
+#view_hospitalization{
+  width: 99%;
 }
