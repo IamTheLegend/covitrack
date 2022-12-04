@@ -11,6 +11,7 @@ const port = process.env.PORT
 import { allChooseData, allDataCountiesByState, countiesByStateTable, statesTable, customDataCountiesByState, customDataCountiesByFips } from "./helper_calls/helper_calls.js";
 import { mapWidget } from './API_Widget/map_view_widget.js';
 import { mortality_rate } from './API_Widget/mortality_rate.js';
+import { raw_data } from './API_Widget/raw_data.js';
 import { hospitalization_data } from './API_Widget/hospitalization_data.js';
 import { infectionPopulationWidget } from './API_Widget/infection_population_widget.js'; //NOT USED
 
@@ -174,6 +175,21 @@ app.post("/api/hospitalizationData", function (req, res) {
         res.send(apiData);
     }
     getHospitalization_Data(reqeustParam);
+});
+
+app.post("/api/rawData", function (req, res) {
+    const keysJSON = Object.keys(req.body)
+    let lengthJSON = keysJSON.length;
+    let reqeustParam = [];
+    for (let i = 0; i < lengthJSON; i++) {
+        reqeustParam.push(keysJSON[i]);
+        reqeustParam.push(req.body[keysJSON[i]]);
+    };
+    async function getRawData(reqeustParam) {
+        const apiData = await raw_data(reqeustParam);
+        res.send(apiData);
+    }
+    getRawData(reqeustParam);
 });
 
 // sets the port to listen for requests.

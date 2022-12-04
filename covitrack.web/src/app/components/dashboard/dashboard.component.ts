@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppHttpService } from '@app/services/app-http.service';
+import { AppStatesRepoService } from '@app/services/app-states-repo.service';
 import * as Highcharts from 'highcharts/highmaps';
 
 
@@ -10,58 +11,72 @@ import * as Highcharts from 'highcharts/highmaps';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private appHttpService: AppHttpService) { }
+  constructor(private appHttpService: AppHttpService, private appStatesRepoService: AppStatesRepoService) {
+    this.state_map = this.appStatesRepoService.getStateNameCodeMap();
+  }
 
   api_repo = {
     "url_map_widget": "http://localhost:4201/api/mapWidget",
-    "url_hospitalization": "http://localhost:4201/api/hospitalizationData"
+    "url_hospitalization": "http://localhost:4201/api/hospitalizationData",
+    "url_raw_data": "http://localhost:4201/api/rawData",
+    "url_mortality_rate": "http://localhost:4201/api/mortalityRate"
   }
 
+  state_map: any = {};
   states_data: any = [];
   hospital_data: any = [];
+  mortalityRate_data: any = [];
+  rawData: any = [];
+
+  formattedRawData: any = [];
+  filteredStates: any = [];
 
   ngOnInit(): void {
     this.getMapsData();
-    this.loadMortalityRate();
-    this.loadHospitalizationData();
   }
 
-  state_wise_data = [
-    ['us-ma', 10], ['us-wa', 11], ['us-ca', 12], ['us-or', 13],
-    ['us-wi', 14], ['us-me', 15], ['us-mi', 16], ['us-nv', 17],
-    ['us-nm', 18], ['us-co', 19], ['us-wy', 20], ['us-ks', 21],
-    ['us-ne', 22], ['us-ok', 23], ['us-mo', 24], ['us-il', 25],
-    ['us-in', 26], ['us-vt', 27], ['us-ar', 28], ['us-tx', 29],
-    ['us-ri', 30], ['us-al', 31], ['us-ms', 32], ['us-nc', 33],
-    ['us-va', 34], ['us-ia', 35], ['us-md', 36], ['us-de', 37],
-    ['us-pa', 38], ['us-nj', 39], ['us-ny', 40], ['us-id', 41],
-    ['us-sd', 42], ['us-ct', 43], ['us-nh', 44], ['us-ky', 45],
-    ['us-oh', 46], ['us-tn', 47], ['us-wv', 48], ['us-dc', 49],
-    ['us-la', 50], ['us-fl', 51], ['us-ga', 52], ['us-sc', 53],
-    ['us-mn', 54], ['us-mt', 55], ['us-nd', 56], ['us-az', 57],
-    ['us-ut', 58], ['us-hi', 59], ['us-ak', 60]
-  ];
-
+  state_wise_data: any = [];
 
   getMapsData() {
     this.appHttpService.GET(this.api_repo.url_map_widget).subscribe((response: any) => {
       this.states_data = response;
+
+      for (let i = 0; i < this.states_data.length; i++) {
+        this.filteredStates.push(this.states_data[i]["state_id"])
+      }
+
       this.loadMapChart();
       this.getHospitalData();
+      this.getMortalityRate();
+      this.getRawData();
     });
   }
 
   getHospitalData() {
-    let stateIdList = []
-    for (let i = 0; i < this.states_data.length; i++) {
-      stateIdList.push(this.states_data[i]["state_id"])
-    }
 
-    this.appHttpService.POST(this.api_repo.url_hospitalization, { "states": stateIdList }).subscribe((response: any) => {
+    this.appHttpService.POST(this.api_repo.url_hospitalization, { "states": this.filteredStates }).subscribe((response: any) => {
       this.hospital_data = response;
       this.loadHospitalizationData();
     });
 
+  }
+
+
+  getMortalityRate() {
+
+
+    this.appHttpService.POST(this.api_repo.url_mortality_rate, { "states": this.filteredStates }).subscribe((response: any) => {
+      this.mortalityRate_data = response;
+      this.loadMortalityRate();
+    });
+
+  }
+
+  getRawData() {
+    this.appHttpService.POST(this.api_repo.url_raw_data, { "states": this.filteredStates }).subscribe((response: any) => {
+      this.rawData = response;
+      this.loadRawData();
+    });
   }
 
   loadMapChart() {
@@ -129,6 +144,25 @@ export class DashboardComponent implements OnInit {
   }
 
   loadMortalityRate() {
+
+    let population = []
+    let cases = []
+    let deaths = []
+
+    let totalCases = 0
+    let totalDeaths = 0
+
+    for (let i = 0; i < this.mortalityRate_data.length; i++) {
+      population.push(this.mortalityRate_data[i]["state_id"])
+      cases.push(this.mortalityRate_data[i]["cases"])
+      deaths.push(this.mortalityRate_data[i]["deaths"])
+
+      totalCases += this.mortalityRate_data[i]["cases"]
+      totalDeaths += this.mortalityRate_data[i]["deaths"]
+
+    }
+
+    console.log(this.mortalityRate_data)
     Highcharts.chart('widget_mortality', {
       chart: {
         plotBackgroundColor: null,
@@ -138,7 +172,7 @@ export class DashboardComponent implements OnInit {
       },
       title: null,
       tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat: '{series.name}: <b>{point.y}</b>'
       },
       accessibility: {
         point: {
@@ -154,7 +188,7 @@ export class DashboardComponent implements OnInit {
           cursor: 'pointer',
           dataLabels: {
             enabled: true,
-            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            format: '<b>{point.name}</b>: {point.y}  ({point.percentage:.1f} %)'
           }
         }
       },
@@ -163,11 +197,11 @@ export class DashboardComponent implements OnInit {
         colorByPoint: true,
         data: [{
           name: 'Deaths',
-          y: 70.67,
+          y: totalDeaths,
           color: '#e24644'
         }, {
-          name: 'Cured',
-          y: 14.77,
+          name: 'Cases',
+          y: totalCases,
           color: '#10a510'
         }]
       }]
@@ -225,7 +259,11 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  loadCountyRawData() {
+  loadRawData() {
+
+    for (let i = 0; i < this.rawData.length; i++) {
+      this.rawData[i]["StateName"] = this.state_map[this.rawData[i]["state_code"]]
+    }
 
   }
 

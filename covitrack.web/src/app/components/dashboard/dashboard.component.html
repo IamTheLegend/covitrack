@@ -8,7 +8,7 @@
     </mat-card>
 
     <mat-card id="view_mortality" class="widget">
-      <mat-card-title class="widget-title">Motality Rate</mat-card-title>
+      <mat-card-title class="widget-title">Mortality Rate</mat-card-title>
       <mat-card-content>
         <div id="widget_mortality"></div>
       </mat-card-content>
@@ -20,5 +20,35 @@
         <div id="widget_hospitalization"></div>
       </mat-card-content>
     </mat-card>
+
+    <mat-card id="view_rawdata" class="widget">
+      <mat-card-title class="widget-title">COVID data</mat-card-title>
+      <mat-card-content>
+        <dx-data-grid id="gridContainer" [dataSource]="rawData" [remoteOperations]="false"
+          [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+          <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+          <dxo-group-panel [visible]="true"></dxo-group-panel>
+          <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+
+          <dxi-column dataField="StateName" dataType="string"></dxi-column>
+          <dxi-column dataField="population" dataType="date"></dxi-column>
+          <dxi-column dataField="cases" dataType="string"></dxi-column>
+          <dxi-column dataField="deaths" dataType="string"></dxi-column>
+          <dxi-column dataField="PositiveTests" dataType="string"></dxi-column>
+          <dxi-column dataField="NegativeTests" dataType="string"></dxi-column>
+          <dxi-column dataField="HospitalBeds_Capacity" dataType="string"></dxi-column>
+          <dxi-column dataField="HospitalBeds_CurrentUsageTotal" dataType="string"></dxi-column>
+          <dxi-column dataField="HospitalBeds_CurrentUsageCovid" dataType="string"></dxi-column>
+          <dxi-column dataField="HospitalBeds_weeklyCovidAdmissions" dataType="string"></dxi-column>
+          <dxi-column dataField="VaccinationsInitiated" dataType="string"></dxi-column>
+          <dxi-column dataField="VaccinationsCompleted" dataType="string"></dxi-column>
+          <dxi-column dataField="VaccinationsAdditionalDose" dataType="string"></dxi-column>
+
+        </dx-data-grid>
+      </mat-card-content>
+    </mat-card>
+
   </div>
 </div>

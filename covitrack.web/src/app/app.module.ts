@@ -11,6 +11,7 @@ import { AppHighchartsModule } from './modules/app-highcharts.module';
 import { MapViewComponent } from './components/widgets/map-view/map-view.component';
 import { MortalityViewComponent } from './components/widgets/mortality-view/mortality-view.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AppDxGridModule } from './modules/app-dx-grid.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     AppSharedModule,
     AppMaterialModule,
+    AppDxGridModule,
     AppHighchartsModule,
     DashboardModule,
     HttpClientModule

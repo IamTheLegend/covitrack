@@ -28,6 +28,12 @@
   float:left;
 }
 
-#view_hospitalization{
+#view_hospitalization, #view_rawdata{
   width: 99%;
+  float: left;
+}
+
+#view_rawdata{
+  height: 530px;
+  margin-bottom: 0.5%;
 }
