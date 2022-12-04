@@ -1,6 +1,6 @@
 #dashboard_view {
   height: calc(100% - 60px);
-  background-color: #e7e7e7;  
+  background-color: #e7e7e7;
   overflow: auto;
 }
 
@@ -23,17 +23,19 @@
   float: left;
 }
 
-#view_mortality{
+#view_mortality {
   width: 44.5%;
-  float:left;
+  float: left;
 }
 
-#view_hospitalization, #view_rawdata{
+#view_hospitalization,
+#view_rawdata {
   width: 99%;
   float: left;
 }
 
-#view_rawdata{
+#view_rawdata {
   height: 530px;
   margin-bottom: 0.5%;
+
 }

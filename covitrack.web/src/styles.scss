@@ -21,5 +21,19 @@ body {
 *::-webkit-scrollbar-thumb {
   background-color: gray; /* color of the scroll thumb */
   border-radius: 10px; /* roundness of the scroll thumb */
-  
+}
+
+.dx-datagrid-rowsview {
+  height: 300px !important;
+  overflow-y: scroll !important;
+
+  .dx-datagrid-rowsview::-webkit-scrollbar {
+    width: 5px; /* width of the entire scrollbar */
+    opacity: 0.5;
+  }
+
+  .dx-datagrid-rowsview::-webkit-scrollbar-thumb {
+    background-color: gray; /* color of the scroll thumb */
+    border-radius: 5px; /* roundness of the scroll thumb */
+  }
 }
