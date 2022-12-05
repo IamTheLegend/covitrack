@@ -266,9 +266,16 @@ export async function customDataCountiesByFips(fip) {
                     "population": apiData[i].population,
                     "cases": apiData[i].actuals.cases,
                     "deaths": apiData[i].actuals.deaths,
+                    "PositiveTests": apiData[i].actuals.positiveTests,
+                    "NegativeTests": apiData[i].actuals.negativeTests,
                     "hospital_beds_total": apiData[i].actuals.hospitalBeds.capacity, //TotalBeds
                     "hospital_beds_occupied": apiData[i].actuals.hospitalBeds.currentUsageTotal, //OccupiedBeds
-                    "hospital_beds_free": ((apiData[i].actuals.hospitalBeds.capacity) - (apiData[i].actuals.hospitalBeds.currentUsageTotal)) //FreeBeds
+                    "HospitalBeds_CurrentUsageCovid": apiData[i].actuals.hospitalBeds.currentUsageCovid,
+                    "hospital_beds_free": ((apiData[i].actuals.hospitalBeds.capacity) - (apiData[i].actuals.hospitalBeds.currentUsageTotal)), //FreeBeds
+                    "HospitalBeds_weeklyCovidAdmissions": apiData[i].actuals.hospitalBeds.weeklyCovidAdmissions,
+                    "VaccinationsInitiated": apiData[i].actuals.vaccinationsInitiated,
+                    "VaccinationsCompleted": apiData[i].actuals.vaccinationsCompleted,
+                    "VaccinationsAdditionalDose": apiData[i].actuals.vaccinationsAdditionalDose
                 })
             }
             return (counties);
@@ -282,9 +289,16 @@ export async function customDataCountiesByFips(fip) {
                         "population": apiData[i].population,
                         "cases": apiData[i].actuals.cases,
                         "deaths": apiData[i].actuals.deaths,
+                        "PositiveTests": apiData[i].actuals.positiveTests,
+                        "NegativeTests": apiData[i].actuals.negativeTests,
                         "hospital_beds_total": apiData[i].actuals.hospitalBeds.capacity, //TotalBeds
                         "hospital_beds_occupied": apiData[i].actuals.hospitalBeds.currentUsageTotal, //OccupiedBeds
-                        "hospital_beds_free": ((apiData[i].actuals.hospitalBeds.capacity) - (apiData[i].actuals.hospitalBeds.currentUsageTotal)) //FreeBeds
+                        "HospitalBeds_CurrentUsageCovid": apiData[i].actuals.hospitalBeds.currentUsageCovid,
+                        "hospital_beds_free": ((apiData[i].actuals.hospitalBeds.capacity) - (apiData[i].actuals.hospitalBeds.currentUsageTotal)), //FreeBeds
+                        "HospitalBeds_weeklyCovidAdmissions": apiData[i].actuals.hospitalBeds.weeklyCovidAdmissions,
+                        "VaccinationsInitiated": apiData[i].actuals.vaccinationsInitiated,
+                        "VaccinationsCompleted": apiData[i].actuals.vaccinationsCompleted,
+                        "VaccinationsAdditionalDose": apiData[i].actuals.vaccinationsAdditionalDose
                     })
                 }
             }

@@ -16,18 +16,18 @@ export async function raw_data(reqeustParam) {
         for (let i = 0; i < apiData.length; i++) {
             states.push({
                 "state_code": apiData[i].state,
-                "population": apiData[i].population,
-                "cases": apiData[i].actuals.cases,
-                "deaths": apiData[i].actuals.deaths,
-                "PositiveTests": apiData[i].actuals.positiveTests,
-                "NegativeTests": apiData[i].actuals.negativeTests,
-                "HospitalBeds_Capacity": apiData[i].actuals.hospitalBeds.capacity,
-                "HospitalBeds_CurrentUsageTotal": apiData[i].actuals.hospitalBeds.currentUsageTotal,
-                "HospitalBeds_CurrentUsageCovid": apiData[i].actuals.hospitalBeds.currentUsageCovid,
-                "HospitalBeds_weeklyCovidAdmissions": apiData[i].actuals.hospitalBeds.weeklyCovidAdmissions,
-                "VaccinationsInitiated": apiData[i].actuals.vaccinationsInitiated,
-                "VaccinationsCompleted": apiData[i].actuals.vaccinationsCompleted,
-                "VaccinationsAdditionalDose": apiData[i].actuals.vaccinationsAdditionalDose
+                "population": apiData[i].population || 0,
+                "cases": apiData[i].actuals.cases || 0,
+                "deaths": apiData[i].actuals.deaths || 0,
+                "PositiveTests": apiData[i].actuals.positiveTests || 0,
+                "NegativeTests": apiData[i].actuals.negativeTests || 0,
+                "HospitalBeds_Capacity": apiData[i].actuals.hospitalBeds.capacity || 0,
+                "HospitalBeds_CurrentUsageTotal": apiData[i].actuals.hospitalBeds.currentUsageTotal || 0,
+                "HospitalBeds_CurrentUsageCovid": apiData[i].actuals.hospitalBeds.currentUsageCovid || 0,
+                "HospitalBeds_weeklyCovidAdmissions": apiData[i].actuals.hospitalBeds.weeklyCovidAdmissions || 0,
+                "VaccinationsInitiated": apiData[i].actuals.vaccinationsInitiated || 0,
+                "VaccinationsCompleted": apiData[i].actuals.vaccinationsCompleted || 0,
+                "VaccinationsAdditionalDose": apiData[i].actuals.vaccinationsAdditionalDose || 0
 
             })
         }
@@ -57,19 +57,19 @@ export async function raw_data(reqeustParam) {
                     if (id == apiData[i].fips) {
                         returnArr.push({
                             "state_code": apiData[i].state,
-                            // "state_id": apiData[i].fips,
-                            "population": apiData[i].population,
-                            "cases": apiData[i].actuals.cases,
-                            "deaths": apiData[i].actuals.deaths,
-                            "PositiveTests": apiData[i].actuals.positiveTests,
-                            "NegativeTests": apiData[i].actuals.negativeTests,
-                            "HospitalBeds_Capacity": apiData[i].actuals.hospitalBeds.capacity,
-                            "HospitalBeds_CurrentUsageTotal": apiData[i].actuals.hospitalBeds.currentUsageTotal,
-                            "HospitalBeds_CurrentUsageCovid": apiData[i].actuals.hospitalBeds.currentUsageCovid,
-                            "HospitalBeds_weeklyCovidAdmissions": apiData[i].actuals.hospitalBeds.weeklyCovidAdmissions,
-                            "VaccinationsInitiated": apiData[i].actuals.vaccinationsInitiated,
-                            "VaccinationsCompleted": apiData[i].actuals.vaccinationsCompleted,
-                            "VaccinationsAdditionalDose": apiData[i].actuals.vaccinationsAdditionalDose
+                            // "state_id": apiData[i].fips|| 0,
+                            "population": apiData[i].population || 0,
+                            "cases": apiData[i].actuals.cases || 0,
+                            "deaths": apiData[i].actuals.deaths || 0,
+                            "PositiveTests": apiData[i].actuals.positiveTests || 0,
+                            "NegativeTests": apiData[i].actuals.negativeTests || 0,
+                            "HospitalBeds_Capacity": apiData[i].actuals.hospitalBeds.capacity || 0,
+                            "HospitalBeds_CurrentUsageTotal": apiData[i].actuals.hospitalBeds.currentUsageTotal || 0,
+                            "HospitalBeds_CurrentUsageCovid": apiData[i].actuals.hospitalBeds.currentUsageCovid || 0,
+                            "HospitalBeds_weeklyCovidAdmissions": apiData[i].actuals.hospitalBeds.weeklyCovidAdmissions || 0,
+                            "VaccinationsInitiated": apiData[i].actuals.vaccinationsInitiated || 0,
+                            "VaccinationsCompleted": apiData[i].actuals.vaccinationsCompleted || 0,
+                            "VaccinationsAdditionalDose": apiData[i].actuals.vaccinationsAdditionalDose || 0
                         })
                     }
                 }
@@ -80,21 +80,21 @@ export async function raw_data(reqeustParam) {
             for (const id of idsArr) {
                 const apiData = await customDataCountiesByFips(id);
                 returnArr.push({
-                    "state_code": apiData[0].state,
+                    "state_code": apiData[0].state_code,
                     "county_name": apiData[0].county_name,
                     "county_id": apiData[0].county_id,
-                    "population": apiData[0].population,
-                    "cases": apiData[0].cases,
-                    "deaths": apiData[0].deaths,
-                    "PositiveTests": apiData[i].actuals.positiveTests,
-                    "NegativeTests": apiData[i].actuals.negativeTests,
-                    "HospitalBeds_Capacity": apiData[i].actuals.hospitalBeds.capacity,
-                    "HospitalBeds_CurrentUsageTotal": apiData[i].actuals.hospitalBeds.currentUsageTotal,
-                    "HospitalBeds_CurrentUsageCovid": apiData[i].actuals.hospitalBeds.currentUsageCovid,
-                    "HospitalBeds_weeklyCovidAdmissions": apiData[i].actuals.hospitalBeds.weeklyCovidAdmissions,
-                    "VaccinationsInitiated": apiData[i].actuals.vaccinationsInitiated,
-                    "VaccinationsCompleted": apiData[i].actuals.vaccinationsCompleted,
-                    "VaccinationsAdditionalDose": apiData[i].actuals.vaccinationsAdditionalDose
+                    "population": apiData[0].population || 0,
+                    "cases": apiData[0].cases || 0,
+                    "deaths": apiData[0].deaths || 0,
+                    "PositiveTests": apiData[0].positiveTests || 0,
+                    "NegativeTests": apiData[0].negativeTests || 0,
+                    "HospitalBeds_Capacity": apiData[0].hospital_beds_total || 0,
+                    "HospitalBeds_CurrentUsageTotal": apiData[0].hospital_beds_occupied || 0,
+                    "HospitalBeds_CurrentUsageCovid": apiData[0].HospitalBeds_CurrentUsageCovid || 0,
+                    "HospitalBeds_weeklyCovidAdmissions": apiData[0].HospitalBeds_weeklyCovidAdmissions || 0,
+                    "VaccinationsInitiated": apiData[0].vaccinationsInitiated || 0,
+                    "VaccinationsCompleted": apiData[0].vaccinationsCompleted || 0,
+                    "VaccinationsAdditionalDose": apiData[0].vaccinationsAdditionalDose || 0
                 })
             }
             idsArr = [];

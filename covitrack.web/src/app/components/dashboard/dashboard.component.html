@@ -56,7 +56,10 @@
           <dxo-group-panel [visible]="true"></dxo-group-panel>
           <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
 
-          <dxi-column dataField="StateName" dataType="string"></dxi-column>
+          <dxi-column dataField="StateName" dataType="string" *ngIf="flags_repo.viewTypeStates != 'counties'">
+          </dxi-column>
+          <dxi-column dataField="county_name" dataType="string" *ngIf="flags_repo.viewTypeStates == 'counties'">
+          </dxi-column>
           <dxi-column dataField="population" dataType="number"></dxi-column>
           <dxi-column dataField="cases" dataType="number"></dxi-column>
           <dxi-column dataField="deaths" dataType="number"></dxi-column>

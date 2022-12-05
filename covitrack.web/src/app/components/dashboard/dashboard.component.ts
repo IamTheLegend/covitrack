@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
   };
 
   flags_repo: any = {
-    viewTypeStates: false
+    viewTypeStates: 'states'
   }
 
   states_data: any = [];
@@ -94,29 +94,44 @@ export class DashboardComponent implements OnInit {
   }
 
   countySelected() {
+    this.flags_repo.viewTypeStates = "counties";
     console.log(this.model_repo.counties_selected)
+    this.getHospitalData();
+    this.getMortalityRate();
+    this.getRawData();
+  }
+
+  getReqObj(): any {
+    let reqObj: any = {};
+    if (this.flags_repo.viewTypeStates == "counties") {
+      if (this.model_repo.counties_selected.length == 0) {
+        this.flags_repo.viewTypeStates = "states";
+        return this.getReqObj();
+      }
+      reqObj["counties"] = this.model_repo.counties_selected;
+    } else {
+      reqObj["states"] = this.filteredStates;
+    }
+    return reqObj;
   }
 
   getHospitalData() {
-
-    this.appHttpService.POST(this.api_repo.url_hospitalization, { "states": this.filteredStates }).subscribe((response: any) => {
+    this.appHttpService.POST(this.api_repo.url_hospitalization, this.getReqObj()).subscribe((response: any) => {
       this.hospital_data = response;
       this.loadHospitalizationData();
     });
-
   }
 
 
   getMortalityRate() {
-    this.appHttpService.POST(this.api_repo.url_mortality_rate, { "states": this.filteredStates }).subscribe((response: any) => {
+    this.appHttpService.POST(this.api_repo.url_mortality_rate, this.getReqObj()).subscribe((response: any) => {
       this.mortalityRate_data = response;
       this.loadMortalityRate();
     });
-
   }
 
   getRawData() {
-    this.appHttpService.POST(this.api_repo.url_raw_data, { "states": this.filteredStates }).subscribe((response: any) => {
+    this.appHttpService.POST(this.api_repo.url_raw_data, this.getReqObj()).subscribe((response: any) => {
       this.rawData = response;
       this.loadRawData();
     });
@@ -257,7 +272,8 @@ export class DashboardComponent implements OnInit {
     let seriesData = []
 
     for (let i = 0; i < this.hospital_data.length; i++) {
-      seriesData.push(this.hospital_data[i]["state_code"])
+      let name_label = (this.flags_repo.viewTypeStates == "states") ? "state_code" : "county_name";
+      seriesData.push(this.hospital_data[i][name_label]);
       hospitalBedsFree.push(this.hospital_data[i]["hospital_beds_free"] || 0)
       hospitalBedsOccupied.push(this.hospital_data[i]["hospital_beds_occupied"] || 0)
     }
@@ -302,11 +318,9 @@ export class DashboardComponent implements OnInit {
   }
 
   loadRawData() {
-
     for (let i = 0; i < this.rawData.length; i++) {
       this.rawData[i]["StateName"] = this.state_map[this.rawData[i]["state_code"]]
     }
-
   }
 
 }
