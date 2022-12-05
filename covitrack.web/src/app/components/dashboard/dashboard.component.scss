@@ -4,6 +4,17 @@
   overflow: auto;
 }
 
+#filters {
+  box-shadow: 0px 0px 0px 2px rgb(0, 0, 0, 0.2);
+  border-radius: 0px;
+  margin-left: 0.5%;
+  margin-top: 0.5%;
+  height: 60px;
+  float: left;
+  width: 99%;
+  padding: 5px 10px 2px 10px;
+}
+
 .widget {
   box-shadow: 0px 0px 0px 2px rgb(0, 0, 0, 0.2);
   border-radius: 0px;
@@ -37,5 +48,4 @@
 #view_rawdata {
   height: 530px;
   margin-bottom: 0.5%;
-
 }

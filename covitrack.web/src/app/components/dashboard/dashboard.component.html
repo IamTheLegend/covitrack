@@ -1,5 +1,18 @@
 <div id="dashboard_view">
   <div class="data-container">
+
+    <mat-card id="filters">
+      <mat-card-content>
+        <mat-form-field appearance="fill">
+          <mat-label>States</mat-label>
+          <mat-select multiple [(ngModel)]="states_selected" (selectionChange)="stateSelected()">
+            <mat-option *ngFor="let state of states_dropdown_list" [value]="state.id">
+              {{state.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
     <mat-card id="view_map" class="widget">
       <mat-card-title class="widget-title">COVID Spread across States</mat-card-title>
       <mat-card-content>

@@ -23,6 +23,10 @@ export class DashboardComponent implements OnInit {
   }
 
   state_map: any = {};
+  states_dropdown_list: any = []
+
+  states_selected = [];
+
   states_data: any = [];
   hospital_data: any = [];
   mortalityRate_data: any = [];
@@ -43,6 +47,10 @@ export class DashboardComponent implements OnInit {
 
       for (let i = 0; i < this.states_data.length; i++) {
         this.filteredStates.push(this.states_data[i]["state_id"])
+        this.states_dropdown_list.push({
+          "id": this.states_data[i]["state_id"],
+          "name": this.state_map[this.states_data[i]["state_code"]]
+        })
       }
 
       this.loadMapChart();
@@ -50,6 +58,18 @@ export class DashboardComponent implements OnInit {
       this.getMortalityRate();
       this.getRawData();
     });
+  }
+
+  stateSelected() {
+    this.filteredStates = this.states_selected;
+    if (this.filteredStates.length == 0) {
+      for (let i = 0; i < this.states_data.length; i++) {
+        this.filteredStates.push(this.states_data[i]["state_id"])
+      }
+    }
+    this.getHospitalData();
+    this.getMortalityRate();
+    this.getRawData();
   }
 
   getHospitalData() {
@@ -63,8 +83,6 @@ export class DashboardComponent implements OnInit {
 
 
   getMortalityRate() {
-
-
     this.appHttpService.POST(this.api_repo.url_mortality_rate, { "states": this.filteredStates }).subscribe((response: any) => {
       this.mortalityRate_data = response;
       this.loadMortalityRate();
@@ -162,7 +180,6 @@ export class DashboardComponent implements OnInit {
 
     }
 
-    console.log(this.mortalityRate_data)
     Highcharts.chart('widget_mortality', {
       chart: {
         plotBackgroundColor: null,
