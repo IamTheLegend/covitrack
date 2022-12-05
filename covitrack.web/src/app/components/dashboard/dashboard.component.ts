@@ -19,13 +19,23 @@ export class DashboardComponent implements OnInit {
     "url_map_widget": "http://localhost:4201/api/mapWidget",
     "url_hospitalization": "http://localhost:4201/api/hospitalizationData",
     "url_raw_data": "http://localhost:4201/api/rawData",
-    "url_mortality_rate": "http://localhost:4201/api/mortalityRate"
+    "url_mortality_rate": "http://localhost:4201/api/mortalityRate",
+    "url_get_counties": "http://localhost:4201/api/countiesByStateTable"
   }
 
   state_map: any = {};
   states_dropdown_list: any = []
 
-  states_selected = [];
+  counties_data: any = [];
+
+  model_repo: any = {
+    states_selected: [],
+    counties_selected: []
+  };
+
+  flags_repo: any = {
+    viewTypeStates: false
+  }
 
   states_data: any = [];
   hospital_data: any = [];
@@ -61,15 +71,30 @@ export class DashboardComponent implements OnInit {
   }
 
   stateSelected() {
-    this.filteredStates = this.states_selected;
+    this.filteredStates = this.model_repo.states_selected;
     if (this.filteredStates.length == 0) {
       for (let i = 0; i < this.states_data.length; i++) {
         this.filteredStates.push(this.states_data[i]["state_id"])
       }
     }
+    this.getCounties();
     this.getHospitalData();
     this.getMortalityRate();
     this.getRawData();
+  }
+
+  getCounties() {
+    this.appHttpService.GET(this.api_repo.url_get_counties + "?states=" + this.filteredStates).subscribe((response: any) => {
+      if (response.length > 0) {
+        for (let i = 0; i < response.length; i++) {
+          this.counties_data.push({ "id": response[i]["county_id"], "name": response[i]["county_name"] });
+        }
+      }
+    });
+  }
+
+  countySelected() {
+    console.log(this.model_repo.counties_selected)
   }
 
   getHospitalData() {
